@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +28,9 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController _characterController;
     private Camera _mainCamera;
+
+    //gravetat
+    public float _gravity = 9.8f;
 
     private void Awake()
     {
@@ -99,6 +103,8 @@ public class PlayerController : MonoBehaviour
     private void MovePlayer()
     {
         //Mou el personatge
+        //aplica gravetat
+        _direction.y -= _gravity * Time.deltaTime;
         _characterController.Move(_direction * speed * Time.deltaTime);
     }
 }
