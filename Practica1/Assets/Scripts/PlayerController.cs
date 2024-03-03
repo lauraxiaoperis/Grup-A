@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _direction;
     private float _currentVelocity;
 
-    private CharacterController _characterController;
+    private Rigidbody _rb;
     private Camera _mainCamera;
 
     //gravetat
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         canDash = true;
-        _characterController = GetComponent<CharacterController>();
+        _rb = GetComponent<Rigidbody>();
         _mainCamera = Camera.main;
         dashCharges = dashMaxCharges;
         Cursor.lockState = CursorLockMode.Locked;
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
         float startTime = Time.time;
         while (Time.time < startTime + dashTime)
         {
-            _characterController.Move(transform.forward * dashSpeed * Time.deltaTime);
+            _rb.MovePosition(transform.position + transform.forward * dashSpeed * Time.fixedDeltaTime);
 
             yield return null;
         }
@@ -105,6 +105,6 @@ public class PlayerController : MonoBehaviour
         //Mou el personatge
         //aplica gravetat
         _direction.y -= _gravity * Time.deltaTime;
-        _characterController.Move(_direction * speed * Time.deltaTime);
+        _rb.MovePosition(transform.position + _direction * speed * Time.fixedDeltaTime);
     }
 }
