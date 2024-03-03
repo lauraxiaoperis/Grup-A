@@ -5,14 +5,16 @@ using UnityEngine;
 public class llave : MonoBehaviour
 {
     public GameObject Objetollave;
-    public GameObject ColliderPuerta;
+    public GameObject ColliderDetector;
+    public Collider ColliderPuerta;
 
     void OnTriggerEnter(Collider other)
     {
 
         if (other.CompareTag("Player"))
         {
-            ColliderPuerta.gameObject.SetActive(true);
+            ColliderDetector.gameObject.SetActive(true);
+            ColliderPuerta.enabled=false;
             Destroy(Objetollave);
         }
 
