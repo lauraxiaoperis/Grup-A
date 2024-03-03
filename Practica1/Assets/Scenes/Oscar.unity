@@ -222,8 +222,8 @@ Transform:
   m_GameObject: {fileID: 24799875}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 3.6481466, y: 7.163269, z: 8.065044}
-  m_LocalScale: {x: 1.1802037, y: 11.520962, z: 7.236501}
+  m_LocalPosition: {x: 4, y: 7.163269, z: 8.065044}
+  m_LocalScale: {x: 1.1802037, y: 11.520962, z: 6.2660556}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1400944858}
@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d52ab1c644b9214fa82b7db15a82cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 15
   dashCooldown:
     cooldownTime: 0.7
   dashSpeed: 10
@@ -421,7 +421,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -719,6 +719,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1400944858}
     m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 374cf072ad9288549a4a5286b47b6818, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.1503
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 374cf072ad9288549a4a5286b47b6818, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.1503
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 374cf072ad9288549a4a5286b47b6818, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.1503
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 374cf072ad9288549a4a5286b47b6818, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.8322773
@@ -1381,8 +1393,8 @@ Transform:
   m_GameObject: {fileID: 731679116}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -2.2718534, y: 12.253269, z: 8.065044}
-  m_LocalScale: {x: 1.1802037, y: 1.2893668, z: 6.8846936}
+  m_LocalPosition: {x: -2.85, y: 13.21, z: 8.065044}
+  m_LocalScale: {x: 1.1802037, y: 1.2893668, z: 18.073008}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1400944858}
@@ -1437,7 +1449,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Objetollave: {fileID: 803344343}
-  ColliderPuerta: {fileID: 1326584009}
+  ColliderDetector: {fileID: 1326584009}
+  ColliderPuerta: {fileID: 677538041}
 --- !u!136 &803344346
 CapsuleCollider:
   m_ObjectHideFlags: 0
