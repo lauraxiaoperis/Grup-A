@@ -25,8 +25,4 @@ public class GameManager : MonoBehaviour
     {
         _playerHealth.ChangeHealth(value);
     }
-    public bool IsDashing()
-    {
-        return _playerController.isDashing;
-    }
 }

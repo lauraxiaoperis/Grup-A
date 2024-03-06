@@ -887,17 +887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  dashCooldown:
-    cooldownTime: 0.7
-  dashSpeed: 10
-  dashTime: 0.3
-  dashMaxCharges: 3
-  dashChargeCooldown: 2
-  isDashing: 0
-  canDash: 0
-  dashCharges: 0
   smoothTime: 0.05
-  _gravity: 9.8
 --- !u!54 &800273718
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2210,35 +2200,11 @@ MonoBehaviour:
     m_ActionId: e93c9413-f6c7-4a6a-9531-bdc000fd359a
     m_ActionName: UI/HUD/New action
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerCombat, Assembly-CSharp
-        m_MethodName: Attack
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: cc92eb2d-8c74-474f-b776-b1ab881ae1d9
     m_ActionName: Gameplay/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 800273717}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Dash
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 4cad4097-e96c-4399-8d06-9848b02b6710
     m_ActionName: Gameplay/Dash[/Keyboard/space,/DualSenseGamepadHID/buttonSouth]
   m_NeverAutoSwitchControlSchemes: 0
