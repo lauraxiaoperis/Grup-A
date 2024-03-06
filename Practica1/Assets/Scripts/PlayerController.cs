@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //Agafa el Input Sistem i l'aplica al componenet Character Controller.
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))] 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
@@ -29,8 +29,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rb;
     private Camera _mainCamera;
 
-    //gravetat
-    public float _gravity = 9.8f;
 
     private void Awake()
     {
@@ -103,8 +101,7 @@ public class PlayerController : MonoBehaviour
     private void MovePlayer()
     {
         //Mou el personatge
-        //aplica gravetat
-        _direction.y -= _gravity * Time.deltaTime;
+   
         _rb.MovePosition(transform.position + _direction * speed * Time.fixedDeltaTime);
     }
 }
