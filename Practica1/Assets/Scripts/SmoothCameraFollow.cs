@@ -25,18 +25,10 @@ public class SmoothCameraFollow : MonoBehaviour
     private void FixedUpdate()
     {
         //Si fa dash, canvia la posició final fins que acabi de dashear.
-        if (GameManager.Instance.IsDashing() == false)
-        {
-            //Setejar valor Zoffset
-            Camera.main.orthographicSize = Mathf.SmoothStep(Camera.main.orthographicSize, _Zoffset, smoothTimeZ * Time.deltaTime);
-            //Projectar vector offset a la orientació de la càmera
-            _offsetVector = transform.rotation * new Vector3(_XYoffset.x, _XYoffset.y, 0);
-            targetPosition = target.position + _offsetVector;
-        }
-        else
-        {
-            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, _Zoffset + dashOffsetZ, smoothTimeZ * Time.deltaTime);
-        }
+        Camera.main.orthographicSize = Mathf.SmoothStep(Camera.main.orthographicSize, _Zoffset, smoothTimeZ * Time.deltaTime);
+        //Projectar vector offset a la orientació de la càmera
+        _offsetVector = transform.rotation * new Vector3(_XYoffset.x, _XYoffset.y, 0);
+        targetPosition = target.position + _offsetVector;
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, smoothTime * Time.deltaTime);
     }
 }

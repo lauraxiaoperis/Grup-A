@@ -5,39 +5,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //Agafa el Input Sistem i l'aplica al componenet Character Controller.
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))] 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     public float speed;
-    [Header("Dash")]
-    [SerializeField] private Cooldown dashCooldown;
-    [SerializeField] private float dashSpeed;
-    [SerializeField] private float dashTime;
-    [SerializeField] private int dashMaxCharges;
-    [SerializeField] private float dashChargeCooldown;
-    public bool isDashing;
-    public bool canDash = true;
-    [SerializeField] private int dashCharges; //nom�s per fer debug
-    private bool dashIsCharging;
     [Header("Camera")]
     [SerializeField] private float smoothTime = 0.05f;
 
     private Vector3 _direction;
     private float _currentVelocity;
 
-    private CharacterController _characterController;
+    private Rigidbody _rb;
     private Camera _mainCamera;
 
-    //gravetat
-    public float _gravity = 9.8f;
 
     private void Awake()
     {
-        canDash = true;
-        _characterController = GetComponent<CharacterController>();
+        _rb = GetComponent<Rigidbody>();
         _mainCamera = Camera.main;
-        dashCharges = dashMaxCharges;
         Cursor.lockState = CursorLockMode.Locked;
     }
     //Al GameObject: PlayerInput -> Events -> Gameplay
@@ -48,47 +34,14 @@ public class PlayerController : MonoBehaviour
         Vector3 cameraForward = Vector3.Scale(_mainCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
         _direction = input.x * _mainCamera.transform.right + input.y * cameraForward;
     }
-    public void Dash(InputAction.CallbackContext context) //S'activa al PlayerInput, fora de l'script, fa dash.
-    {
-        if (dashCharges < 1 || dashCooldown.IsCoolingDown || !context.started || !canDash) return;
-        dashCharges--;
-        StartCoroutine(Dash());
-        dashCooldown.StartCooldown();
-        if (!dashIsCharging)
-        {
-            dashIsCharging = true;
-            StartCoroutine(DashChargeCooldown());
-        }
-    }
-    IEnumerator Dash()
-    {
-        isDashing = true;
-        float startTime = Time.time;
-        while (Time.time < startTime + dashTime)
-        {
-            _characterController.Move(transform.forward * dashSpeed * Time.deltaTime);
-
-            yield return null;
-        }
-        isDashing = false;
-    }
-    IEnumerator DashChargeCooldown()
-    {
-        while (dashCharges < dashMaxCharges)
-        {
-            yield return new WaitForSecondsRealtime(dashChargeCooldown); // Pause for a second
-            dashCharges++;
-        }
-        dashIsCharging = false;
-    }
     private void FixedUpdate()
     {
-        if (_direction.sqrMagnitude == 0 || isDashing) return;
+        if (_direction.sqrMagnitude == 0) return;
         MovePlayer();
     }
     private void Update()
     {
-        if (_direction.sqrMagnitude == 0 || isDashing) return;
+        if (_direction.sqrMagnitude == 0) return;
         RotatePlayer();
     }
     private void RotatePlayer()
@@ -103,8 +56,7 @@ public class PlayerController : MonoBehaviour
     private void MovePlayer()
     {
         //Mou el personatge
-        //aplica gravetat
-        _direction.y -= _gravity * Time.deltaTime;
-        _characterController.Move(_direction * speed * Time.deltaTime);
+   
+        _rb.MovePosition(transform.position + _direction * speed * Time.fixedDeltaTime);
     }
 }
