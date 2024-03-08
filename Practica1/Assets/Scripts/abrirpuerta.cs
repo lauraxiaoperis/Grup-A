@@ -11,13 +11,19 @@ public class abrirpuerta : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        animator.Play(NombreAnimacionOpen);
-        doorCollider.enabled = false;
+        if(other.GetComponent<PlayerController>() != null)
+        {
+            animator.Play(NombreAnimacionOpen);
+            doorCollider.enabled = false;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        animator.Play(NombreAnimacionClose);
-        doorCollider.enabled = true;
+        if (other.GetComponent<PlayerController>() != null)
+        {
+            animator.Play(NombreAnimacionClose);
+            doorCollider.enabled = true;
+        }
     }
 }
