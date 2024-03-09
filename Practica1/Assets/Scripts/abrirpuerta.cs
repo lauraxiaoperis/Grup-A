@@ -9,6 +9,7 @@ public class abrirpuerta : MonoBehaviour
     public Collider doorCollider;
     public Animator animator;
 
+    //Abrir puerta sin llave
     private void OnTriggerEnter(Collider other)
     {
         if(other.GetComponent<PlayerController>() != null)
@@ -18,6 +19,7 @@ public class abrirpuerta : MonoBehaviour
         }
     }
 
+    //Cerrar puerta sin llave
     private void OnTriggerExit(Collider other)
     {
         if (other.GetComponent<PlayerController>() != null)
