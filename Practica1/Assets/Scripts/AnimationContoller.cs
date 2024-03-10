@@ -56,9 +56,9 @@ public class AnimationContoller : MonoBehaviour
             animator.SetBool(isRunningHash, true);
         }
 
-        //if(IsRunning && (!forwardPressed || !runPressed)){
-          //  animator.SetBool(isRunningHash, false);
-        //}
+        if(IsRunning && (!forwardPressed || !runPressed)){
+            animator.SetBool(isRunningHash, false);
+        }
 
         //if()
     }
