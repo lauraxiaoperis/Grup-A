@@ -2406,7 +2406,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -23.112434, y: 34.18933, z: -15.1431}
+  m_ConnectedAnchor: {x: -22.52, y: 8.23, z: -33.29}
   serializedVersion: 2
   m_UseSpring: 0
   m_Spring:
@@ -2557,11 +2557,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1516321500}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 463895b51b444a44492a802e7db1a96c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ee0bd4ac1114c842b1bc186d94201f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windDirection: {x: 0, y: 0, z: 1}
-  windStrength: 10
+  windStrength: 1000
 --- !u!1 &1534550314
 GameObject:
   m_ObjectHideFlags: 0
