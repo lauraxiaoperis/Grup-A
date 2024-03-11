@@ -8,6 +8,7 @@ public class AnimationContoller : MonoBehaviour
     Animator animator;
     int isWalkingHash;
     int isRunningHash;
+    int isJumpingHash;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +16,7 @@ public class AnimationContoller : MonoBehaviour
         animator = GetComponent<Animator>();
         isWalkingHash = Animator.StringToHash("IsWalking");
         isRunningHash = Animator.StringToHash("IsRunning");
+        isJumpingHash = Animator.StringToHash("IsJumping");
     }
 
     // Update is called once per frame
@@ -39,27 +41,72 @@ public class AnimationContoller : MonoBehaviour
 
         bool IsRunning = animator.GetBool(isRunningHash);
         bool IsWalking = animator.GetBool(isWalkingHash);
-        bool IsJumping = animator.GetBool("IsJumping");
+        bool IsJumping = animator.GetBool(isJumpingHash);
         //bool forwardPressed = Input.GetKey("w"); //wasd
         bool runPressed = Input.GetKey("left shift");
         bool jumpPressed = Input.GetKey("space");
 
+        //No camina i presiona cualsevol de wasd = caminar
         if(!IsWalking && forwardPressed){
             animator.SetBool(isWalkingHash, true);
         }
 
+        //Esta caminant i deixa de presionar = no caminar
         if(IsWalking && !forwardPressed){
             animator.SetBool(isWalkingHash, false);
         }
 
+        //No corre, i clica caminar+correr = correr
         if(!IsRunning && (forwardPressed && runPressed)){
             animator.SetBool(isRunningHash, true);
         }
 
+        //Corre, i no hi ha clicat ni caminar o correr = para de correr
         if(IsRunning && (!forwardPressed || !runPressed)){
             animator.SetBool(isRunningHash, false);
         }
 
-        //if()
+        //Salta, si no avança ni corre = saltar
+        if(jumpPressed && (!forwardPressed && !runPressed)){
+            animator.SetBool(isJumpingHash, true);
+            animator.SetBool(isWalkingHash, false);
+            animator.SetBool(isRunningHash, false);
+        }
+
+        //Salta, i està avançant = saltar
+        if(IsWalking && (jumpPressed && forwardPressed)){
+            animator.SetBool(isJumpingHash, true);
+            animator.SetBool(isWalkingHash, false);
+            animator.SetBool(isRunningHash, false);
+        }
+
+        //Salta, i està corrent = salta
+        if(IsRunning && jumpPressed ){
+            animator.SetBool(isJumpingHash, true);
+            animator.SetBool(isRunningHash, false);
+            animator.SetBool(isWalkingHash, false);
+        }
+
+        //Si està saltant i deixa de saltar sense clicar res.
+        if(IsJumping && (!jumpPressed && (!forwardPressed || !runPressed))){
+            animator.SetBool(isJumpingHash, false);
+            animator.SetBool(isRunningHash, false);
+            animator.SetBool(isWalkingHash, false);
+        }
+
+        // Si està saltant i deixa de saltar + wasd es posa a caminar
+        if(IsJumping && (!jumpPressed && forwardPressed)){
+            animator.SetBool(isWalkingHash, true);
+            animator.SetBool(isRunningHash, false);
+            animator.SetBool(isJumpingHash, false);
+        }
+
+        // Si està saltant i deixa de saltar + wasd+shift es posa a correr
+        if(IsJumping && (!jumpPressed && (forwardPressed && runPressed))){
+            animator.SetBool(isRunningHash, true);
+            animator.SetBool(isJumpingHash, false);
+            animator.SetBool(isWalkingHash, false);
+        }
+        
     }
 }

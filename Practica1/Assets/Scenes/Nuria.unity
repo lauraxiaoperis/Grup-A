@@ -3209,7 +3209,7 @@ MonoBehaviour:
   StandingHeight: 2
   CrouchingHeight: 1
   IceSpeedMultiplier: 2
-  JumpSpeed: 10
+  JumpSpeed: 5
   GroundChecker: {fileID: 707667563}
   groundSphereRadius: 0.1
   WhatIsGround:
