@@ -1,65 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class AnimationContoller : MonoBehaviour
 {
-    CharacterController _characterController;
+    PlayerController _pcScript;
     Animator animator;
     int isWalkingHash;
     int isRunningHash;
+    int isJumpingHash;
+    int IsCrouchingHash;
     // Start is called before the first frame update
     void Start()
     {
-        _characterController = GetComponentInParent<CharacterController>();
+        _pcScript = GetComponentInParent<PlayerController>();
         animator = GetComponent<Animator>();
         isWalkingHash = Animator.StringToHash("IsWalking");
         isRunningHash = Animator.StringToHash("IsRunning");
+        isJumpingHash = Animator.StringToHash("IsJumping");
+        IsCrouchingHash = Animator.StringToHash("IsCrouching");
     }
 
     // Update is called once per frame
     void Update()
     {
-        bool forwardPressed;
-        Vector2 horizontalVelocity = new Vector2(_characterController.velocity.x , _characterController.velocity.z);
-        if(horizontalVelocity.magnitude == 0 ){
-            forwardPressed = false;
-            animator.SetBool(isRunningHash, false);
+        for (int i = 0; i < animator.parameterCount; i++)
+        {
+            AnimatorControllerParameter parameter = animator.GetParameter(i);
+            if (parameter.type == AnimatorControllerParameterType.Bool)
+            {
+                // Set the boolean parameter to false
+                animator.SetBool(parameter.name, false);
+            }
         }
-        else if(horizontalVelocity.magnitude > 0 || horizontalVelocity.magnitude < 1f){
-            forwardPressed = true;
-            animator.SetBool(isRunningHash, false);
+        if (_pcScript.isJumping)
+        {
+            animator.SetBool(isJumpingHash, true);
         }
-        else{
+        else if (_pcScript.isCrouching)
+        {
+            animator.SetBool(IsCrouchingHash, true);
+        }
+        else if (_pcScript.direction.sqrMagnitude != 0 && _pcScript.isRunning)
+        {
             animator.SetBool(isRunningHash, true);
-            forwardPressed = false;
         }
-        
-        
-
-        bool IsRunning = animator.GetBool(isRunningHash);
-        bool IsWalking = animator.GetBool(isWalkingHash);
-        bool IsJumping = animator.GetBool("IsJumping");
-        //bool forwardPressed = Input.GetKey("w"); //wasd
-        bool runPressed = Input.GetKey("left shift");
-        bool jumpPressed = Input.GetKey("space");
-
-        if(!IsWalking && forwardPressed){
+        if (_pcScript.direction.sqrMagnitude != 0)
+        {
             animator.SetBool(isWalkingHash, true);
         }
-
-        if(IsWalking && !forwardPressed){
-            animator.SetBool(isWalkingHash, false);
-        }
-
-        if(!IsRunning && (forwardPressed && runPressed)){
-            animator.SetBool(isRunningHash, true);
-        }
-
-        if(IsRunning && (!forwardPressed || !runPressed)){
-            animator.SetBool(isRunningHash, false);
-        }
-
-        //if()
     }
 }

@@ -9,23 +9,51 @@ public class SmoothCameraFollow : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private float smoothTime;
     [SerializeField] private float dashOffsetZ;
+    [SerializeField] private Vector2 firstOffsetXY;
     [SerializeField] private float moveOffsetXY;
+    [SerializeField] private float zoomOffset;
+    [SerializeField] private float smoothTimeZoom;
+    [SerializeField] private float startFOV;
     private Vector3 _currentVelocity = Vector3.zero;
     private Vector3 _offsetVector;
     private Vector3 targetPosition;
+    private float currentZoom;
+    [SerializeField] Camera firstPersonCamera;
+    [SerializeField] Camera thirdPersonCamera;
 
     private void Awake()
     {
+        currentZoom = startFOV;
         transform.position = target.position;
     }
     public void Move(InputAction.CallbackContext context) //S'activa al PlayerInput, fora de l'script, defineix _direction
     {
-        _XYoffset = context.ReadValue<Vector2>() * moveOffsetXY;
+        _XYoffset = firstOffsetXY + context.ReadValue<Vector2>() * moveOffsetXY;
+    }
+    public void ChangeView(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            firstPersonCamera.enabled = !firstPersonCamera.enabled;
+            thirdPersonCamera.enabled = !thirdPersonCamera.enabled;
+        }
+    }
+    public void Zoom(InputAction.CallbackContext context)
+    {
+        Debug.Log(context.ReadValue<float>());
+        if (context.ReadValue<float>() == 1)
+        {
+            currentZoom = zoomOffset;
+        }
+        else
+        {
+            currentZoom = startFOV;
+        }
     }
     private void FixedUpdate()
     {
-        //Si fa dash, canvia la posició final fins que acabi de dashear.
-        Camera.main.orthographicSize = Mathf.SmoothStep(Camera.main.orthographicSize, _Zoffset, smoothTimeZ * Time.deltaTime);
+        firstPersonCamera.fieldOfView = Mathf.SmoothStep(firstPersonCamera.fieldOfView, currentZoom, smoothTimeZoom * Time.deltaTime);
+        thirdPersonCamera.orthographicSize = Mathf.SmoothStep(thirdPersonCamera.orthographicSize, _Zoffset, smoothTimeZ * Time.deltaTime);
         //Projectar vector offset a la orientació de la càmera
         _offsetVector = transform.rotation * new Vector3(_XYoffset.x, _XYoffset.y, 0);
         targetPosition = target.position + _offsetVector;
