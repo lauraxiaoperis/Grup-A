@@ -9,6 +9,7 @@ public class AnimationContoller : MonoBehaviour
     int isWalkingHash;
     int isRunningHash;
     int isJumpingHash;
+    int IsCrouchingHash;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +18,7 @@ public class AnimationContoller : MonoBehaviour
         isWalkingHash = Animator.StringToHash("IsWalking");
         isRunningHash = Animator.StringToHash("IsRunning");
         isJumpingHash = Animator.StringToHash("IsJumping");
+        IsCrouchingHash = Animator.StringToHash("IsCrouching");
     }
 
     // Update is called once per frame
@@ -31,6 +33,7 @@ public class AnimationContoller : MonoBehaviour
         else if(horizontalVelocity.magnitude > 0 || horizontalVelocity.magnitude < 1f){
             forwardPressed = true;
             animator.SetBool(isRunningHash, false);
+            animator.SetBool(isJumpingHash, false);
         }
         else{
             animator.SetBool(isRunningHash, true);
@@ -42,9 +45,11 @@ public class AnimationContoller : MonoBehaviour
         bool IsRunning = animator.GetBool(isRunningHash);
         bool IsWalking = animator.GetBool(isWalkingHash);
         bool IsJumping = animator.GetBool(isJumpingHash);
+        bool IsCrouching = animator.GetBool(IsCrouchingHash);
         //bool forwardPressed = Input.GetKey("w"); //wasd
         bool runPressed = Input.GetKey("left shift");
         bool jumpPressed = Input.GetKey("space");
+        bool crouchPressed = Input.GetKey(KeyCode.LeftControl);
 
         //No camina i presiona cualsevol de wasd = caminar
         if(!IsWalking && forwardPressed){
@@ -67,7 +72,7 @@ public class AnimationContoller : MonoBehaviour
         }
 
         //Salta, si no avança ni corre = saltar
-        if(jumpPressed && (!forwardPressed && !runPressed)){
+        if(!IsWalking && (jumpPressed && (!forwardPressed && !runPressed))){
             animator.SetBool(isJumpingHash, true);
             animator.SetBool(isWalkingHash, false);
             animator.SetBool(isRunningHash, false);
@@ -108,5 +113,8 @@ public class AnimationContoller : MonoBehaviour
             animator.SetBool(isWalkingHash, false);
         }
         
+        //Si està quiet,s'ajup
+        //if(!IsWalking && )
+
     }
 }
