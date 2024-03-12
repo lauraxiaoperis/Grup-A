@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed = 10f;
     public float sprintSpeed = 15f; // Velocidad de sprint
     public float crouchSpeedMultiplier = 0.5f; // Multiplicador de velocidad cuando se agacha
-    public float standingHeight = 2f; // Altura normal del jugador
+    private float standingHeight; // Altura normal del jugador
     public float iceSpeedMultiplier = 2f; // Multiplicador de velocidad sobre hielo
     public float jumpingSpeedMultiplier = 0.125f; // Multiplicador de velocidad sobre hielo
     public float crouchingHeight = 1f; // Altura del jugador cuando está agachado
@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _collider = GetComponent<CapsuleCollider>();
+        standingHeight = _collider.height;
         // Guarda la posición inicial del GroundChecker en relación con la altura del jugador
         _groundCheckerOffset = GroundChecker.localPosition;
     }
