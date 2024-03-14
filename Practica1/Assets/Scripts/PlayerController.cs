@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //Agafa el Input Sistem i l'aplica al componenet Character Controller.
-[RequireComponent(typeof(Rigidbody))] 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
@@ -16,37 +15,37 @@ public class PlayerController : MonoBehaviour
     public float iceSpeedMultiplier = 2f; // Multiplicador de velocidad sobre hielo
     public float jumpingSpeedMultiplier = 0.125f; // Multiplicador de velocidad sobre hielo
     public float crouchingHeight = 1f; // Altura del jugador cuando está agachado
+    public float smoothTimeJump;
     private float currentSpeed = 10f;
     private float currentMultiplier = 1f;
     public bool isRunning = false;
     public bool isCrouching = false;
     public bool isJumping = false;
+    public bool isIceJumping = false;
     [Header("Camera")]
-    public float smoothTime = 0.05f;
+    public float smoothTimeCam = 0.05f;
     public float jumpForce = 10f;
     [Header("Jump")]
     public Transform GroundChecker;
     public float groundSphereRadius = 0.1f;
     public LayerMask WhatIsGround;
     public LayerMask WhatIsIce;
-    private Vector3 _groundCheckerOffset;
 
+    public Vector3 horizontalDirection;
+    private float verticalValue;
     public Vector3 direction;
     public bool isFirstPerson = false;
     private float _currentRotVelocity;
+    private float _currentJumpVelocity;
 
-    private Rigidbody _rb;
-    private CapsuleCollider _collider;
+    private CharacterController _characterController;
     public Camera thirdCamera;
     public Camera firstCamera;
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
-        _collider = GetComponent<CapsuleCollider>();
-        standingHeight = _collider.height;
-        // Guarda la posición inicial del GroundChecker en relación con la altura del jugador
-        _groundCheckerOffset = GroundChecker.localPosition;
+        _characterController = GetComponent<CharacterController>();
+        standingHeight = _characterController.height;
     }
     public void Crouch(InputAction.CallbackContext context)
     {
@@ -55,14 +54,14 @@ public class PlayerController : MonoBehaviour
         {
             isCrouching = true;
             currentSpeed = walkSpeed * crouchSpeedMultiplier;
-            _collider.height = crouchingHeight;
-            GroundChecker.localPosition = new Vector3(_groundCheckerOffset.x, crouchingHeight / 2f, _groundCheckerOffset.z);
+            _characterController.height = crouchingHeight;
+            _characterController.center -= new Vector3(_characterController.center.x, (standingHeight - crouchingHeight)/2, _characterController.center.z);
         }
         if (context.canceled)
         {
             isCrouching = false;
-            _collider.height = standingHeight;
-            GroundChecker.localPosition = _groundCheckerOffset;
+            _characterController.height = standingHeight;
+            _characterController.center = new Vector3(_characterController.center.x, standingHeight / 2, _characterController.center.z);
             currentSpeed = walkSpeed;
         }
     }
@@ -84,9 +83,8 @@ public class PlayerController : MonoBehaviour
     {
         if (!context.started || !IsGrounded()) return;
         isJumping = true;
+        if (ShouldSlice()) isIceJumping = true;
         StartCoroutine(Jumping());
-        Vector3 jumpVector = new Vector3(0, jumpForce, 0);
-        _rb.AddForce(jumpVector, ForceMode.VelocityChange);
     }
     public void ChangeCameraView(InputAction.CallbackContext context)
     {
@@ -97,54 +95,68 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        GetMultipliers();
+        MovePlayer();
+    }
+    private void Update()
+    {
+        RotatePlayer();
+    }
+    private void GetMultipliers()
+    {
         currentMultiplier = 1f;
-        if (ShouldSlice())
+        if (ShouldSlice() || isIceJumping)
         {
             // Ajusta la velocidad si está sobre hielo
             currentMultiplier = iceSpeedMultiplier; // Aumenta la velocidad cuando está sobre hielo
         }
-        if (!IsGrounded())
+        if (!IsGrounded() && !isIceJumping)
         {
             // Ajusta la velocidad si está en el aire
             currentMultiplier = jumpingSpeedMultiplier;
         }
-        if (direction.sqrMagnitude != 0)
-        {
-            MovePlayer();
-        }
     }
-    private void Update()
-    {
-        if (direction.sqrMagnitude == 0) return;
-        RotatePlayer();
-    }
-    public void Move(InputAction.CallbackContext context) //S'activa al PlayerInput, fora de l'script, defineix direction
+    public void Move(InputAction.CallbackContext context) //S'activa al PlayerInput, fora de l'script, defineix horizontalDirection
     {
         Vector2 input = context.ReadValue<Vector2>();
         //Canviar els eixos als de la Main Camera.
         if (isFirstPerson)
         {
-            direction = input.x * firstCamera.transform.right + input.y * firstCamera.transform.forward;
+            horizontalDirection = input.x * firstCamera.transform.right + input.y * firstCamera.transform.forward;
         }
         else
         {
             Vector3 cameraForward = Vector3.Scale(thirdCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
-            direction = input.x * thirdCamera.transform.right + input.y * cameraForward;
+            horizontalDirection = input.x * thirdCamera.transform.right + input.y * cameraForward;
         }
     }
     private void RotatePlayer()
     {
         //Si no hi ha cap input, no rotem.
+        if (horizontalDirection.sqrMagnitude == 0) return;
         //Agafa l'angle de la direcci� on vol anar
-        var targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        var targetAngle = Mathf.Atan2(horizontalDirection.x, horizontalDirection.z) * Mathf.Rad2Deg;
         //Modifica l'angle de forma smooth per anar d'angle on vol anar des de angle actual.
-        var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentRotVelocity, smoothTime);
+        var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentRotVelocity, smoothTimeCam);
         transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
     }
     private void MovePlayer()
     {
+        if (isJumping)
+        {
+            verticalValue = Mathf.SmoothDamp(0, jumpForce, ref _currentJumpVelocity, smoothTimeJump);
+        }
+        else if (!IsGrounded())
+        {
+            verticalValue -= 9.8f * Time.deltaTime;
+        }
+        else
+        {
+            verticalValue = 0;
+        }
+        direction = horizontalDirection * currentSpeed * currentMultiplier + Vector3.up * verticalValue;
         //Mou el personatge
-        _rb.MovePosition(transform.position + direction * currentSpeed * currentMultiplier * Time.fixedDeltaTime);
+        _characterController.Move(direction * Time.fixedDeltaTime);
     }
     private bool ShouldSlice()
     {
@@ -158,5 +170,6 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         isJumping = false;
+        isIceJumping = false;
     }
 }

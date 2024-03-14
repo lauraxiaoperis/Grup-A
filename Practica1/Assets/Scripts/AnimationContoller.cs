@@ -42,11 +42,11 @@ public class AnimationContoller : MonoBehaviour
         {
             animator.SetBool(IsCrouchingHash, true);
         }
-        else if (_pcScript.direction.sqrMagnitude != 0 && _pcScript.isRunning)
+        else if (_pcScript.horizontalDirection.sqrMagnitude != 0 && _pcScript.isRunning)
         {
             animator.SetBool(isRunningHash, true);
         }
-        if (_pcScript.direction.sqrMagnitude != 0)
+        if (_pcScript.horizontalDirection.sqrMagnitude != 0)
         {
             animator.SetBool(isWalkingHash, true);
         }
