@@ -14,12 +14,14 @@ public class SmoothCameraFollow : MonoBehaviour
     [SerializeField] private float zoomOffset;
     [SerializeField] private float smoothTimeZoom;
     [SerializeField] private float startFOV;
+    [SerializeField] private float sensitivity;
     private Vector3 _currentVelocity = Vector3.zero;
     private Vector3 _offsetVector;
     private Vector3 targetPosition;
     private float currentZoom;
     [SerializeField] Camera firstPersonCamera;
     [SerializeField] Camera thirdPersonCamera;
+    private Vector2 currentRotation = new Vector2();
 
     private void Awake()
     {
@@ -36,7 +38,6 @@ public class SmoothCameraFollow : MonoBehaviour
         {
             firstPersonCamera.enabled = !firstPersonCamera.enabled;
             thirdPersonCamera.enabled = !thirdPersonCamera.enabled;
-            firstPersonCamera.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
     public void Zoom(InputAction.CallbackContext context)
@@ -53,7 +54,10 @@ public class SmoothCameraFollow : MonoBehaviour
     }
     public void CameraRotate(InputAction.CallbackContext context)
     {
-        firstPersonCamera.transform.rotation = Quaternion.Euler(context.ReadValue<Vector2>().y, context.ReadValue<Vector2>().x, 0);
+        if (!firstPersonCamera.enabled) return;
+        currentRotation.x += context.ReadValue<Vector2>().y * sensitivity;
+        currentRotation.y += context.ReadValue<Vector2>().x * sensitivity;
+        firstPersonCamera.transform.rotation = Quaternion.Euler(-Mathf.Clamp(currentRotation.x, -45f, 45f), currentRotation.y, 0);
     }
     private void FixedUpdate()
     {

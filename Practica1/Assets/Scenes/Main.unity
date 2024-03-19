@@ -1851,6 +1851,7 @@ MonoBehaviour:
   zoomOffset: 20
   smoothTimeZoom: 10
   startFOV: 60
+  sensitivity: 0.3
   firstPersonCamera: {fileID: 1011463317}
   thirdPersonCamera: {fileID: 215506483}
 --- !u!1001 &232751727
@@ -14308,15 +14309,16 @@ MonoBehaviour:
   sprintSpeed: 20
   crouchSpeedMultiplier: 0.5
   iceSpeedMultiplier: 1.5
-  jumpingSpeedMultiplier: 0.1
+  jumpingSpeedMultiplier: 0.5
   crouchingHeight: 1
-  smoothTimeJump: 0
+  smoothTimeJump: 0.11
+  smoothTimeMultiplier: 0.055
   isRunning: 0
   isCrouching: 0
   isJumping: 0
   isIceJumping: 0
   smoothTimeCam: 0.05
-  jumpForce: 6
+  jumpForce: 35
   GroundChecker: {fileID: 1355469465}
   groundSphereRadius: 0.2
   WhatIsGround:
@@ -15954,6 +15956,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 973eb561-451f-400f-9a5d-593ebf7b856c
     m_ActionName: Gameplay/Zoom[/Keyboard/z,/DualSenseGamepadHID/buttonNorth]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 215506485}
+        m_TargetAssemblyTypeName: SmoothCameraFollow, Assembly-CSharp
+        m_MethodName: CameraRotate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6260b26b-aee8-46df-bd9b-c02c59ee1edd
+    m_ActionName: Gameplay/FirstPersonView[/Mouse/delta]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay

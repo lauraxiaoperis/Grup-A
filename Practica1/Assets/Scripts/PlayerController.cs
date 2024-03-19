@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public float jumpingSpeedMultiplier = 0.125f; // Multiplicador de velocidad sobre hielo
     public float crouchingHeight = 1f; // Altura del jugador cuando está agachado
     public float smoothTimeJump;
+    public float smoothTimeMultiplier;
     private float currentSpeed = 10f;
     private float currentMultiplier = 1f;
     public bool isRunning = false;
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
     public bool isFirstPerson = false;
     private float _currentRotVelocity;
     private float _currentJumpVelocity;
+    private float _currentMultiplier;
 
     private CharacterController _characterController;
     public Camera thirdCamera;
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
         if (context.started)
         {
             isCrouching = true;
+            firstCamera.transform.position = new Vector3(firstCamera.transform.position.x, firstCamera.transform.position.y / 1.5f, firstCamera.transform.position.z);
             currentSpeed = walkSpeed * crouchSpeedMultiplier;
             _characterController.height = crouchingHeight;
             _characterController.center -= new Vector3(_characterController.center.x, (standingHeight - crouchingHeight)/2, _characterController.center.z);
@@ -60,6 +63,7 @@ public class PlayerController : MonoBehaviour
         if (context.canceled)
         {
             isCrouching = false;
+            firstCamera.transform.position = new Vector3(firstCamera.transform.position.x, firstCamera.transform.position.y * 1.5f, firstCamera.transform.position.z);
             _characterController.height = standingHeight;
             _characterController.center = new Vector3(_characterController.center.x, standingHeight / 2, _characterController.center.z);
             currentSpeed = walkSpeed;
@@ -67,7 +71,7 @@ public class PlayerController : MonoBehaviour
     }
     public void Sprint(InputAction.CallbackContext context)
     {
-        if (isCrouching) return;
+        if (isCrouching || isJumping) return;
         if (context.started)
         {
             isRunning= true;
@@ -109,7 +113,7 @@ public class PlayerController : MonoBehaviour
         if (ShouldSlice() || isIceJumping)
         {
             // Ajusta la velocidad si está sobre hielo
-            currentMultiplier = iceSpeedMultiplier; // Aumenta la velocidad cuando está sobre hielo
+            currentMultiplier = Mathf.SmoothDamp(currentMultiplier, iceSpeedMultiplier, ref _currentMultiplier, smoothTimeMultiplier);
         }
         if (!IsGrounded() && !isIceJumping)
         {
@@ -123,7 +127,8 @@ public class PlayerController : MonoBehaviour
         //Canviar els eixos als de la Main Camera.
         if (isFirstPerson)
         {
-            horizontalDirection = input.x * firstCamera.transform.right + input.y * firstCamera.transform.forward;
+            Vector3 cameraForward = Vector3.Scale(firstCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
+            horizontalDirection = input.x * firstCamera.transform.right + input.y * cameraForward;
         }
         else
         {
@@ -149,7 +154,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (!IsGrounded())
         {
-            verticalValue -= 9.8f * Time.deltaTime;
+            verticalValue -= 19.8f * Time.deltaTime;
         }
         else
         {
