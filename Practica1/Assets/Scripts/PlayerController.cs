@@ -100,6 +100,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        if (isFirstPerson == true) return;
         RotatePlayer();
     }
     private void GetMultipliers()

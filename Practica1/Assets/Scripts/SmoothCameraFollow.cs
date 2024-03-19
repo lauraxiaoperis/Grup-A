@@ -36,6 +36,7 @@ public class SmoothCameraFollow : MonoBehaviour
         {
             firstPersonCamera.enabled = !firstPersonCamera.enabled;
             thirdPersonCamera.enabled = !thirdPersonCamera.enabled;
+            firstPersonCamera.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
     public void Zoom(InputAction.CallbackContext context)
@@ -49,6 +50,10 @@ public class SmoothCameraFollow : MonoBehaviour
         {
             currentZoom = startFOV;
         }
+    }
+    public void CameraRotate(InputAction.CallbackContext context)
+    {
+        firstPersonCamera.transform.rotation = Quaternion.Euler(context.ReadValue<Vector2>().y, context.ReadValue<Vector2>().x, 0);
     }
     private void FixedUpdate()
     {
