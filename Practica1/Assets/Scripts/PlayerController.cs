@@ -32,6 +32,9 @@ public class PlayerController : MonoBehaviour
     public LayerMask WhatIsGround;
     public LayerMask WhatIsIce;
 
+    [Header("Double Jump")]
+    public float JumpCounter = 2;
+
     public Vector3 horizontalDirection;
     private float verticalValue;
     public Vector3 direction;
@@ -84,9 +87,14 @@ public class PlayerController : MonoBehaviour
         }
     }
     public void Jump(InputAction.CallbackContext context)
-    {
-        if (!context.started || !IsGrounded()) return;
-        isJumping = true;
+    {   
+        if (!context.started || (!IsGrounded() && JumpCounter<1)) return;
+        //Double Jump
+        if (JumpCounter > 0)
+        {
+            isJumping = true;
+            JumpCounter--;
+        }
         if (ShouldSlice()) isIceJumping = true;
         StartCoroutine(Jumping());
     }
@@ -159,6 +167,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             verticalValue = 0;
+            //Reinici contador doble salt
+            JumpCounter = 2;
         }
         direction = horizontalDirection * currentSpeed * currentMultiplier + Vector3.up * verticalValue;
         //Mou el personatge

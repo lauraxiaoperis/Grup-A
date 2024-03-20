@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float JumpHeight = 1f;
     public float JumpTime;
     //
+    public float JumpCounter = 2;
 
     public Transform GroundChecker;
     public float groundSphereRadius = 0.1f;
@@ -82,8 +83,16 @@ public class PlayerMovement : MonoBehaviour
 
         if (ShouldJump())
         {
+            if (JumpCounter > 0) 
+            {
+                JumpCounter--;
+            }
             //v = 2h/t
             velocity.y = JumpSpeed;
+        }
+
+        if (IsGrounded()) {
+            JumpCounter = 2;
         }
 
         _lastVelocity_Y = velocity.y;
@@ -105,7 +114,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool ShouldJump()
     {
-        return _inputController.Jumped && IsGrounded();
+ 
+        return (_inputController.Jumped && IsGrounded())||(JumpCounter>0);
     }
 
     private bool IsGrounded()
