@@ -13,6 +13,10 @@ public class PlayerMovement : MonoBehaviour
     public float IceSpeedMultiplier = 2f; // Multiplicador de velocidad sobre hielo
 
     public float JumpSpeed = 10f;
+    // Doble salt
+    public float JumpHeight = 1f;
+    public float JumpTime;
+    //
 
     public Transform GroundChecker;
     public float groundSphereRadius = 0.1f;
@@ -78,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (ShouldJump())
         {
+            //v = 2h/t
             velocity.y = JumpSpeed;
         }
 
@@ -111,6 +116,8 @@ public class PlayerMovement : MonoBehaviour
     private float GetGravity()
     {
         float currentVelocity = _lastVelocity_Y;
+        
+        //g = -2h/t^2 (h= alçada a la que volem arrivar)
         currentVelocity += Physics.gravity.y * Time.deltaTime;
         return currentVelocity;
     }
