@@ -37,8 +37,7 @@ public class SmoothCameraFollow : MonoBehaviour
         ZoomUpdate();
         //Camera Position Follow
         transform.position = Vector3.SmoothDamp(transform.position, target.position + startOffsetPos, ref _currentVelocity, smoothTime * Time.deltaTime);
-        if (target.gameObject.GetComponent<PlayerController>().isCrouching) return;
-        firstPersonCamera.transform.position = transform.position;
+        firstPersonCamera.transform.position = new Vector3(transform.position.x, firstPersonCamera.transform.position.y, transform.position.z);
     }
     private void Update()
     {
