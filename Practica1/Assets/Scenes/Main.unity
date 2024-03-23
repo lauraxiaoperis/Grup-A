@@ -1852,6 +1852,7 @@ MonoBehaviour:
   startFOV: 60
   zoomOffset: 20
   smoothTimeZoom: 10
+  crouchHeight: 1.5
 --- !u!1001 &232751727
 PrefabInstance:
   m_ObjectHideFlags: 0
