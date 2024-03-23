@@ -37,6 +37,7 @@ public class SmoothCameraFollow : MonoBehaviour
         ZoomUpdate();
         //Camera Position Follow
         transform.position = Vector3.SmoothDamp(transform.position, target.position + startOffsetPos, ref _currentVelocity, smoothTime * Time.deltaTime);
+        firstPersonCamera.transform.position = transform.position;
         //Camera Rotation Follow
     }
     private void Update()

@@ -36,8 +36,11 @@ public class PlayerController : MonoBehaviour
     public float JumpCounter = 2;
 
     public Vector3 horizontalDirection;
-    private float verticalValue;
     private Vector3 direction;
+    private Vector3 viewForward;
+    private Vector3 viewRight;
+    private Vector2 moveInput;
+    private float verticalValue;
     public bool isFirstPerson = false;
     private float _currentRotVelocity;
     private float _currentJumpVelocity;
@@ -90,6 +93,10 @@ public class PlayerController : MonoBehaviour
             //Reinici contador doble salt
             JumpCounter = 2;
         }
+        viewForward = isFirstPerson ? firstCamera.transform.forward : thirdCamera.transform.forward;
+        viewRight = isFirstPerson ? firstCamera.transform.right : thirdCamera.transform.right;
+        viewForward = Vector3.Scale(viewForward, new Vector3(1, 0, 1)).normalized;
+        horizontalDirection = moveInput.x * viewRight + moveInput.y * viewForward;
         direction = horizontalDirection * currentSpeed * currentMultiplier + Vector3.up * verticalValue;
         //Mou el personatge
         _characterController.Move(direction * Time.fixedDeltaTime);
@@ -97,7 +104,7 @@ public class PlayerController : MonoBehaviour
     private void RotatePlayer()
     {
         //Si no hi ha cap input, no rotem.
-        if (horizontalDirection.sqrMagnitude == 0 || isFirstPerson) return;
+        if (horizontalDirection.sqrMagnitude == 0) return;
         //Agafa l'angle de la direcci� on vol anar
         var targetAngle = Mathf.Atan2(horizontalDirection.x, horizontalDirection.z) * Mathf.Rad2Deg;
         //Modifica l'angle de forma smooth per anar d'angle on vol anar des de angle actual.
@@ -106,12 +113,8 @@ public class PlayerController : MonoBehaviour
     }
     public void Move(InputAction.CallbackContext context)
     {
-        Vector2 input = context.ReadValue<Vector2>();
+        moveInput = context.ReadValue<Vector2>();
         //Canviar els eixos depenent de la vista
-        Vector3 viewForward = isFirstPerson ? firstCamera.transform.forward : thirdCamera.transform.forward;
-        Vector3 viewRight = isFirstPerson ? firstCamera.transform.right : thirdCamera.transform.right;
-        viewForward = Vector3.Scale(viewForward, new Vector3(1, 0, 1)).normalized;
-        horizontalDirection = input.x * viewRight + input.y * viewForward;
     }
     public void Sprint(InputAction.CallbackContext context)
     {
