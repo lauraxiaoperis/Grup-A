@@ -13,12 +13,12 @@ public class SmoothCameraFollow : MonoBehaviour
     [SerializeField] private float smoothTimeZ;
     [SerializeField] private float startOrtSize;
     [SerializeField] private float zoomOrtSize;
-
     [Header("First person")]
     [SerializeField] private float sensitivity;
     [SerializeField] private float startFOV;
     [SerializeField] private float zoomOffset;
     [SerializeField] private float smoothTimeZoom;
+    [SerializeField] private float crouchHeight = 3/2;
 
     private Vector3 _currentVelocity;
     private float currentZoom;
@@ -37,7 +37,8 @@ public class SmoothCameraFollow : MonoBehaviour
         ZoomUpdate();
         //Camera Position Follow
         transform.position = Vector3.SmoothDamp(transform.position, target.position + startOffsetPos, ref _currentVelocity, smoothTime * Time.deltaTime);
-        firstPersonCamera.transform.position = new Vector3(transform.position.x, firstPersonCamera.transform.position.y, transform.position.z);
+        float height = (target.gameObject.GetComponent<PlayerController>().isCrouching) ? crouchHeight : 1f;
+        firstPersonCamera.transform.position = new Vector3(transform.position.x, transform.position.y / height, transform.position.z);
     }
     private void Update()
     {

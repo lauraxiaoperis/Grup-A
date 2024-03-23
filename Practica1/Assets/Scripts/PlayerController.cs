@@ -148,12 +148,10 @@ public class PlayerController : MonoBehaviour
         currentSpeed = isCrouching ? (walkSpeed * crouchSpeedMultiplier) : walkSpeed;
         if (context.started)
         {
-            firstCamera.transform.position = new Vector3(firstCamera.transform.position.x, firstCamera.transform.position.y / 1.5f, firstCamera.transform.position.z);
             _characterController.center -= new Vector3(_characterController.center.x, (standingHeight - crouchingHeight) / 2, _characterController.center.z);
         }
         if (context.canceled)
         {
-            firstCamera.transform.position = new Vector3(firstCamera.transform.position.x, firstCamera.transform.position.y * 1.5f, firstCamera.transform.position.z);
             _characterController.center = new Vector3(_characterController.center.x, standingHeight / 2, _characterController.center.z);
         }
     }
