@@ -8,6 +8,7 @@ public class SmoothCameraFollow : MonoBehaviour
     [SerializeField] private Camera thirdPersonCamera;
     [SerializeField] private Transform target;
     [SerializeField] private float smoothTime;
+    [SerializeField] Vector3 startOffsetPos;
     [Header("3D Z")]
     [SerializeField] private float smoothTimeZ;
     [SerializeField] private float startOrtSize;
@@ -29,13 +30,13 @@ public class SmoothCameraFollow : MonoBehaviour
     {
         currentZoom = startFOV;
         _Zoffset = startOrtSize;
-        transform.position = target.position;
+        transform.position = target.position + startOffsetPos;
     }
     private void FixedUpdate()
     {
         ZoomUpdate();
         //Camera Position Follow
-        transform.position = Vector3.SmoothDamp(transform.position, target.position, ref _currentVelocity, smoothTime * Time.deltaTime);
+        transform.position = Vector3.SmoothDamp(transform.position, target.position + startOffsetPos, ref _currentVelocity, smoothTime * Time.deltaTime);
         //Camera Rotation Follow
         Rotate();
     }
