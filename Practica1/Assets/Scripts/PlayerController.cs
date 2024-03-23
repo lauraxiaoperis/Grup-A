@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
     private void RotatePlayer()
     {
         //Si no hi ha cap input, no rotem.
-        if (horizontalDirection.sqrMagnitude == 0) return;
+        if (horizontalDirection.sqrMagnitude == 0 || isFirstPerson) return;
         //Agafa l'angle de la direcci� on vol anar
         var targetAngle = Mathf.Atan2(horizontalDirection.x, horizontalDirection.z) * Mathf.Rad2Deg;
         //Modifica l'angle de forma smooth per anar d'angle on vol anar des de angle actual.

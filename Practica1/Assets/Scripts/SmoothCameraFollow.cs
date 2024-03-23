@@ -58,6 +58,8 @@ public class SmoothCameraFollow : MonoBehaviour
     {
         if (context.started)
         {
+            Cursor.visible = !Cursor.visible;
+            firstPersonCamera.transform.rotation = target.rotation;
             firstPersonCamera.enabled = !firstPersonCamera.enabled;
             thirdPersonCamera.enabled = !thirdPersonCamera.enabled;
         }

@@ -1848,7 +1848,7 @@ MonoBehaviour:
   smoothTimeZ: 3
   startOrtSize: 5
   zoomOrtSize: 3
-  sensitivity: 0.3
+  sensitivity: 1
   startFOV: 60
   zoomOffset: 20
   smoothTimeZoom: 10
