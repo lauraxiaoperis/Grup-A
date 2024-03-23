@@ -3,34 +3,55 @@ using UnityEngine.InputSystem;
 
 public class SmoothCameraFollow : MonoBehaviour
 {
-    public Vector2 _XYoffset;
-    public float _Zoffset;
-    public float smoothTimeZ;
+    [Header("Camera and Target")]
+    [SerializeField] private Camera firstPersonCamera;
+    [SerializeField] private Camera thirdPersonCamera;
     [SerializeField] private Transform target;
     [SerializeField] private float smoothTime;
-    [SerializeField] private float dashOffsetZ;
-    [SerializeField] private Vector2 firstOffsetXY;
-    [SerializeField] private float moveOffsetXY;
+    [Header("3D Z")]
+    [SerializeField] private float smoothTimeZ;
+    [SerializeField] private float startOrtSize;
+    [SerializeField] private float zoomOrtSize;
+
+    [Header("First person")]
+    [SerializeField] private float sensitivity;
+    [SerializeField] private float startFOV;
     [SerializeField] private float zoomOffset;
     [SerializeField] private float smoothTimeZoom;
-    [SerializeField] private float startFOV;
-    [SerializeField] private float sensitivity;
-    private Vector3 _currentVelocity = Vector3.zero;
-    private Vector3 _offsetVector;
-    private Vector3 targetPosition;
+
+    private Vector3 _currentVelocity;
     private float currentZoom;
-    [SerializeField] Camera firstPersonCamera;
-    [SerializeField] Camera thirdPersonCamera;
-    private Vector2 currentRotation = new Vector2();
+    private float _Zoffset;
+    private Vector2 desiredRotation;
+    private Vector2 currentRotation;
 
     private void Awake()
     {
         currentZoom = startFOV;
+        _Zoffset = startOrtSize;
         transform.position = target.position;
     }
-    public void Move(InputAction.CallbackContext context) //S'activa al PlayerInput, fora de l'script, defineix _direction
+    private void FixedUpdate()
     {
-        _XYoffset = firstOffsetXY + context.ReadValue<Vector2>() * moveOffsetXY;
+        ZoomUpdate();
+        //Camera Position Follow
+        transform.position = Vector3.SmoothDamp(transform.position, target.position, ref _currentVelocity, smoothTime * Time.deltaTime);
+        //Camera Rotation Follow
+        Rotate();
+    }
+
+    private void ZoomUpdate()
+    {
+        firstPersonCamera.fieldOfView = Mathf.SmoothStep(firstPersonCamera.fieldOfView, currentZoom, smoothTimeZoom * Time.deltaTime);
+        thirdPersonCamera.orthographicSize = Mathf.SmoothStep(thirdPersonCamera.orthographicSize, _Zoffset, smoothTimeZ * Time.deltaTime);
+    }
+
+    private void Rotate()
+    {
+        if (desiredRotation.sqrMagnitude == 0) return;
+        currentRotation.x += desiredRotation.y * sensitivity;
+        currentRotation.y += desiredRotation.x * sensitivity;
+        firstPersonCamera.transform.rotation = Quaternion.Euler(-Mathf.Clamp(currentRotation.x, -45f, 45f), currentRotation.y, 0);
     }
     public void ChangeView(InputAction.CallbackContext context)
     {
@@ -42,30 +63,12 @@ public class SmoothCameraFollow : MonoBehaviour
     }
     public void Zoom(InputAction.CallbackContext context)
     {
-        Debug.Log(context.ReadValue<float>());
-        if (context.ReadValue<float>() == 1)
-        {
-            currentZoom = zoomOffset;
-        }
-        else
-        {
-            currentZoom = startFOV;
-        }
+        currentZoom = (context.ReadValue<float>() == 1) ? zoomOffset : startFOV;
+        _Zoffset = (context.ReadValue<float>() == 1) ? zoomOrtSize : startOrtSize;
     }
     public void CameraRotate(InputAction.CallbackContext context)
     {
         if (!firstPersonCamera.enabled) return;
-        currentRotation.x += context.ReadValue<Vector2>().y * sensitivity;
-        currentRotation.y += context.ReadValue<Vector2>().x * sensitivity;
-        firstPersonCamera.transform.rotation = Quaternion.Euler(-Mathf.Clamp(currentRotation.x, -45f, 45f), currentRotation.y, 0);
-    }
-    private void FixedUpdate()
-    {
-        firstPersonCamera.fieldOfView = Mathf.SmoothStep(firstPersonCamera.fieldOfView, currentZoom, smoothTimeZoom * Time.deltaTime);
-        thirdPersonCamera.orthographicSize = Mathf.SmoothStep(thirdPersonCamera.orthographicSize, _Zoffset, smoothTimeZ * Time.deltaTime);
-        //Projectar vector offset a la orientació de la càmera
-        _offsetVector = transform.rotation * new Vector3(_XYoffset.x, _XYoffset.y, 0);
-        targetPosition = target.position + _offsetVector;
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, smoothTime * Time.deltaTime);
+        desiredRotation = context.ReadValue<Vector2>();
     }
 }

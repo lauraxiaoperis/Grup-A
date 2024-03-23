@@ -128,7 +128,7 @@
                 {
                     "name": "",
                     "id": "8f48c2c2-ec1f-4bb3-8005-f908c8622834",
-                    "path": "<Gamepad>/rightStick",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -237,6 +237,28 @@
                 },
                 {
                     "name": "",
+                    "id": "71e8e289-50ea-46c1-b134-cc1e84ff0923",
+                    "path": "<DualShockGamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Change View",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d260a5b6-da62-420d-a45e-d88113ef6e39",
+                    "path": "<XInputController>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Change View",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "97f84e96-0724-45cf-b743-929afa6ec85c",
                     "path": "<Keyboard>/z",
                     "interactions": "",
@@ -260,11 +282,22 @@
                 {
                     "name": "",
                     "id": "319805c5-f3e7-43fc-8c6c-5f6be80be87c",
-                    "path": "<XInputController>/buttonNorth",
+                    "path": "<XInputController>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "199f228a-762f-48c2-a159-ed737f57cce3",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "ScaleVector2(x=10,y=10)",
+                    "groups": "Gamepad",
+                    "action": "FirstPersonView",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -283,17 +316,6 @@
         }
     ],
     "controlSchemes": [
-        {
-            "name": "Keyboard",
-            "bindingGroup": "Keyboard",
-            "devices": [
-                {
-                    "devicePath": "<Keyboard>",
-                    "isOptional": false,
-                    "isOR": false
-                }
-            ]
-        },
         {
             "name": "Gamepad",
             "bindingGroup": "Gamepad",
