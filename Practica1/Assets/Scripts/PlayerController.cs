@@ -25,12 +25,13 @@ public class PlayerController : MonoBehaviour
     public bool isIceJumping = false;
     [Header("Camera")]
     public float smoothTimeCam = 0.05f;
-    public float jumpForce = 10f;
     [Header("Jump")]
     public Transform GroundChecker;
     public float groundSphereRadius = 0.1f;
     public LayerMask WhatIsGround;
     public LayerMask WhatIsIce;
+    public float heightJump = 2f;
+    public float timeJump = 1f;
 
     [Header("Double Jump")]
     public float JumpCounter = 2;
@@ -158,7 +159,12 @@ public class PlayerController : MonoBehaviour
     {
         if (isJumping)
         {
-            verticalValue = Mathf.SmoothDamp(0, jumpForce, ref _currentJumpVelocity, smoothTimeJump);
+            // Se puede ajustar la altura y el tiempo del salto
+            float v = 2 * heightJump / timeJump;
+            float g = -2 * heightJump / (timeJump * timeJump);
+
+            v += g * Time.deltaTime;
+            verticalValue = Mathf.SmoothDamp(0, v, ref _currentJumpVelocity, smoothTimeJump);
         }
         else if (!IsGrounded())
         {
